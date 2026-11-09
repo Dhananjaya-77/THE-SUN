@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
+    "stop": "lsof -ti :3001 | xargs kill -9 2>/dev/null || true",
     "build": "tsc",
     "start": "node dist/index.js",
     "prisma:generate": "prisma generate",

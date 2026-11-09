@@ -74,6 +74,18 @@ app.use('/api/simulation', simulationRoutes);
 // Error handler (must be last)
 app.use(errorHandler);
 
+// Server startup error handling (e.g. EADDRINUSE)
+httpServer.on('error', (err: any) => {
+  if (err.code === 'EADDRINUSE') {
+    logger.error(`❌ Port ${config.port} is already in use by another process.`);
+    logger.error(`👉 Run 'lsof -ti :${config.port} | xargs kill -9' or 'npm run stop' to free port ${config.port}.`);
+    process.exit(1);
+  } else {
+    logger.error('❌ Server startup error:', err);
+    process.exit(1);
+  }
+});
+
 // Start server
 httpServer.listen(config.port, () => {
   logger.info(`☀ The Sun API server running on port ${config.port}`);
